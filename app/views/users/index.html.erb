@@ -1,0 +1,37 @@
+<p id="notice"><%= notice %></p>
+
+<h1>編集委員一覧</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>名前</th>
+      <th>所属</th>
+      <th>Email</th>
+      <th>有効</th>
+      <th>ゲスト</th>
+      <th>管理者</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.name %></td>
+        <td><%= user.affiliation %></td>
+        <td><%= user.email %></td>
+        <td><%= show_boolean(user.active) %></td>
+        <td><%= show_boolean(user.guest_editor) %></td>
+        <td><%= show_boolean(user.admin) %></td>
+        <td><%= link_to '表示', user %></td>
+        <td><%= link_to '修正', edit_user_path(user) %></td>
+        <td><%= link_to '削除', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to '新規委員登録', new_user_path %>

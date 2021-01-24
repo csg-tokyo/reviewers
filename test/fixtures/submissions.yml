@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  article: one
+  kind: 1
+  file: 
+  memo: MyText
+
+two:
+  article: two
+  kind: 1
+  file: 
+  memo: MyText

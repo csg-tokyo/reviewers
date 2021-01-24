@@ -1,0 +1,38 @@
+<%= form_for(actionlog) do |f| %>
+  <% if actionlog.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(actionlog.errors.count, "error") %> prohibited this actionlog from being saved:</h2>
+
+      <ul>
+      <% actionlog.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= f.label :article_id %>
+  <div class="field">
+    <%= actionlog.article.name %> <%= actionlog.article.title %>
+    <%= f.hidden_field :article_id %>
+  </div>
+  <br/>
+
+  <div class="field">
+    <%= f.label '実施日' %>
+    <%= f.date_select :created_at %>
+  </div>
+  <br/>
+
+  <div class="field">
+    <%= f.label '種類' %>
+    <%= f.select :kind, Actionlog::KIND %>
+  </div>
+
+  <p><br/>進捗記録は、査読依頼を出したとき、著者への連絡をおこなったとき（照会、最終原稿作成依頼）には必ず記録してください。
+  </p>
+
+  <div class="actions">
+    <%= f.submit '記録' %>
+  </div>
+<% end %>

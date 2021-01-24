@@ -1,0 +1,150 @@
+<h1>採録通知（担当編集委員より著者宛）</h1>
+
+<% ronbun = @article.category_group_name %>
+
+<p>
+To: <%= @article.authors.sort{|a,b| a.id <=> b.id }.map{|a| a.email }
+                        .join(", ") %><br/>
+Cc: <%= editor_email %><br/>
+Subject: 採録通知：<%= ronbun %>原稿 <%= @article.name %>
+</p>
+
+<br/>
+
+<p>
+  <% @article.authors.sort{|a,b| a.id <=> b.id }.each do |author| %>
+    <%= author.name %>様、
+  <% end %>
+</p>
+
+<p>拝啓 時下ますますご健勝のこととお慶び申しあげます。</p>
+
+<p>さて、このたび、日本ソフトウェア科学会「コンピュータソフトウェア」にご投稿いただきました<%= ronbun %></p>
+
+<p>
+<%= ronbun %>番号：<%= @article.name %><br/>
+著者：
+  <% @article.authors.sort{|a,b| a.id <=> b.id }.each do |author| %>
+    <%= author.name + '　' %>
+  <% end %>
+<br/>
+<%= ronbun %>題目：<%= @article.title %>
+</p>
+
+<p>が
+
+<% review = @article.final_decision %>
+<% if review.nil? %>
+   <% is_conditional_accept = false %>
+   <font color="red">（編集長への報告が未了のため日付不明）</font>
+<% else %>
+   <% is_conditional_accept = review.is_conditional_accept %>
+   <%= review.created_at.to_date %>
+<% end %>
+
+<% if is_conditional_accept %>
+にコメント付き条件採録となりました。
+</p>
+
+<p>担当編集委員および査読者からのコメントを本メールに同封いたしますので、
+コメントの指摘を満たすように最終原稿を作成いただき、</p>
+<% else %>
+に採録となりました。
+
+<p>担当編集委員および査読者からの参考意見を本メールに同封いたしますので、なるべくそれらの意見を反映するように最終原稿を作成いただき、</p>
+
+<% end %>
+
+<p>
+<% if is_conditional_accept %>
+・ コメントへの回答<br/>
+<% end %>
+・ 最終原稿のファイル一式（LaTeX ソースその他）<br/>
+　 （この最終原稿の末尾には各著者の略歴をそれぞれ200字程度にまとめた著者紹介を含めてください。スタイルファイルにあるguide.pdf参照）<br/>
+・ 各著者の電子写真（640  480ピクセル以上、縦横問わず）<br/>
+・ 必要事項を記入した著作権譲渡同意書
+</p>
+
+<p>を zip 形式で固めたものを担当編集委員
+(<%= if @article.editors[0] then @article.editors[0].user.email else '' end %>)
+および編集委員長 (<%= editor_email %>)
+宛に３週間以内に電子メールにてお送り下さい。
+Subject: に論文番号を明記いただくようお願いします。
+</p>
+
+<p>正式な採録通知書は、最終原稿確認の後に編集委員長からメールいたします。
+<% if is_conditional_accept %>
+コメントへの回答または最終原稿への反映が十分でない場合、改善をお願いすることがあります。
+<% end %>
+</p>
+
+<p>スタイルファイルおよび最終稿作成上の注意事項は、
+日本ソフトウェア科学会ホームページ http://www.jssst.or.jp/
+からたどれる「投稿および最終稿用スタイルファイル」のページに掲載してありますのでご参照下さい。
+また、著作権譲渡同意書は、下記のいずれかをダウンロードして下さい。
+</p>
+
+<p>
+Wordファイル版: http://www.jssst.or.jp/files/user/edit/JSSST-rights-transfer.doc<br/>
+PDFファイル版:  http://www.jssst.or.jp/files/user/edit/JSSST-rights-transfer.pdf
+</p>
+
+<p>最終原稿を準備する際は、1 ページ目の脚注にある英文タイトルや著者名・所属についても正しいことを必ず確認してください。</p>
+
+<% if @article.is_letter %>
+<p>レター論文の場合は、改訂後の刷り上がりページ数も原則６ページ以内、
+著者紹介を含め全部で７ページ以内ですので、十分ご注意ください。
+（査読者のコメントに対する対応に必要であれば加筆部分が７ページ目に及んでも構いません。）
+</p>
+<% end %>
+
+<p>敬具</p>
+
+<p><%= Time.now.strftime("%Y 年 %m 月 %d 日") %></p>
+
+<p>日本ソフトウェア科学会 編集委員 <font color="red">《または「編集委員」ではなく「ゲストエディタ」》</font></p>
+
+<p><font color="red">《氏名・所属・連絡先をここにうめる》</font></p>
+
+<% unless @article.final_decision.nil? %>
+<p>========================================</p>
+<p>担当編集委員</p>
+
+<p><%= simple_format(html_escape(@article.final_decision.to_author)) %></p>
+<% end %>
+
+<% unless @review_a.nil? %>
+<p>========================================</p>
+<p>査読者Ａ</p>
+
+<p><%= @number %> 回目査読結果<br/>
+判定：<%= @review_a.decision_name %></p>
+
+<p><%= simple_format(html_escape(@review_a.to_author)) %></p>
+<% end %>
+
+<% unless @review_b.nil? %>
+<p>========================================</p>
+
+<p>査読者Ｂ</p>
+
+<p><%= @number %> 回目査読結果<br/>
+判定：<%= @review_b.decision_name %></p>
+
+<p><%= simple_format(html_escape(@review_b.to_author)) %></p>
+<% end %>
+
+<% unless @review_c.nil? %>
+<p>========================================</p>
+
+<p>査読者Ｃ</p>
+
+<p><%= @number %> 回目査読結果<br/>
+判定：<%= @review_c.decision_name %></p>
+
+<p><%= simple_format(html_escape(@review_c.to_author)) %></p>
+<% end %>
+
+<br/>
+
+<%= link_to '戻る', @article %>

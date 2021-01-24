@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Article:</strong>
+  <%= @conflict.article %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @conflict.user %>
+</p>
+
+<%= link_to 'Edit', edit_conflict_path(@conflict) %> |
+<%= link_to 'Back', conflicts_path %>

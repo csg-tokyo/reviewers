@@ -1,0 +1,8 @@
+<h1>委員情報 修正</h1>
+
+<%= render 'form', user: @user %>
+
+<%= link_to '戻る', @user %>
+<% if logged_in_as_admin? %>
+  | <%= link_to '委員一覧', users_path %>
+<% end %>

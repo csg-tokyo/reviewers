@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  article_id: one
+  kind: 1
+  decision: 1
+  award: false
+  to_editor: MyText
+  to_author: MyText
+  memo: MyText
+
+two:
+  article_id: two
+  kind: 1
+  decision: 1
+  award: false
+  to_editor: MyText
+  to_author: MyText
+  memo: MyText

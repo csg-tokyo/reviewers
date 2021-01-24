@@ -1,0 +1,41 @@
+<h1>担当編集委員依頼</h1>
+
+<% ronbun = @article.category_group_name %>
+
+<p>
+To: <%= @article.users.map {|e| e.email }.join(", ") %><br/>
+Subject: コンピュータソフトウェア誌投稿<%= ronbun %> <%= @article.name %> 担当のお願い
+</p>
+
+<br/>
+
+<p>
+  <% @article.users.map do |user| %>
+    <%= user.name %>様、
+  <% end %>
+</p>
+
+<p>日本ソフトウェア科学会「コンピュータソフトウェア」誌の編集へのご協力ありがとうございます。
+このほど投稿されました<%= ronbun %></p>
+
+<p>
+<%= ronbun %>番号：<%= @article.name %><br/>
+著者：　　
+  <% @article.authors.sort{|a,b| a.id <=> b.id }.each do |author| %>
+    <%= author.name + '　' %>
+  <% end %>
+<br/>
+<%= ronbun %>題目：<%= @article.title %>
+<br/>
+<%= "#{site_url}articles/#{@article.id}" %>
+</p>
+
+<p>の担当編集委員をお願いしたいのですが、お引き受けいただけますでしょうか。<br/>
+お忙しいところ恐縮ですがご承諾いただければ幸いです。
+</p>
+
+<%= chiefs_signature.html_safe %>
+
+<p><br/></p>
+
+<%= link_to '戻る', @article %>

@@ -1,0 +1,2 @@
+json.extract! article, :id, :title, :article_type, :category, :pages, :decision, :volume, :number, :memo, :name, :is_letter, :contact, :done, :approved, :created_at, :updated_at
+json.url article_url(article, format: :json)

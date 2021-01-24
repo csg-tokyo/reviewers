@@ -1,0 +1,83 @@
+<div class="footnote">「修正」は基本情報の修正のためのものです。
+査読結果の追加等には「表示」を選択してください。
+</div>
+
+<br/>
+
+<table>
+  <thead>
+    <tr>
+      <th>記事番号</th>
+      <th>題名</th>
+      <th>種別</th>
+<% if logged_in_as_admin? %>
+      <th>担当</th>
+<% end %>
+      <th>状況</th>
+      <th>採否</th>
+      <th>承認</th>
+      <th>掲載</th>
+      <th>メモ</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @articles.each do |article| %>
+      <tr>
+        <td><%= article.name %></td>
+        <td><span title="<%= sanitize article.title %>">
+            <%= sanitize article.title.truncate(20) %>
+        </span></td>
+        <td><span title="<%= article.category_name %>">
+            <%= article.category_name.truncate(5) %>
+        </span></td>
+
+        <% if logged_in_as_admin? %>
+         <td>
+           <% article_user = article.users.first %>
+           <% unless article_user.nil? %>
+             <span title="<%= article_user.name %>">
+               <%=  article_user.name.truncate(5) %>
+             </span>
+           <% end %>
+         </td>
+        <% end %>
+
+        <% if logged_in_as_oneof?(article.conflicts) %>
+         <th colspan=5></th>
+        <% else %>
+          <td><span title="<%= article.current_status %>">
+              <%= article.current_status.truncate(20) %>
+          </span></td>
+          <td><span title="<%= article.final_decision_name %>">
+            <%= article.final_decision_name.truncate(7) %>
+          </span></td>
+          <td><%= show_boolean(article.approved) %></td>
+          <td>
+            <% if article.number != nil %>
+              <%= link_to "#{article.volume}-#{article.number}",
+                  "/issue/#{article.volume}/#{article.number}" %>
+            <% end %>
+          </td>
+
+          <td><span title="<%= article.memo %>">
+            <%= article.memo.truncate(5) %>
+          </span></td>
+
+          <td><%= link_to '表示', article %></td>
+          <% if logged_in_as_admin? || logged_in_as_oneof?(article.editors) %>
+            <td><%= link_to '修正', edit_article_path(article) %></td>
+            <td><%= link_to '削除', article, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <% else %>
+            <td></td><td></td>
+          <% end %>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br/>
+
+<%= link_to '新規記事', new_article_path %>

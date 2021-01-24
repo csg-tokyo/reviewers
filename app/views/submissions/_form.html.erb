@@ -1,0 +1,59 @@
+<%= form_for(submission) do |f| %>
+  <% if submission.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(submission.errors.count, "error") %> prohibited this submission from being saved:</h2>
+
+      <ul>
+      <% submission.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= f.label :article_id %>
+  <div class="field">
+    <%= submission.article.name %> <%= submission.article.title %>
+    <%= f.hidden_field :article_id %>
+  </div>
+
+  <br/>
+  <div class="field">
+    <%= f.label '提出日' %>
+    <%= f.date_select :created_at %>
+  </div>
+  <br/>
+
+  <div class="field">
+    <%= f.label '種類' %>
+    <%= f.select :kind, Submission::KIND %>
+  </div>
+  <div class="field">
+    <label></label>
+カメラレディ稿はコメントや参考意見の反映を担当編集委員が確認した後に保存してください。
+  </div>
+
+  <%= f.label :file %>
+  <div class="field">
+    <%= f.file_field :file %>
+  </div>
+
+  <%= f.label :memo %>
+  <div class="field">
+    <%= f.text_area :memo %>
+  </div>
+
+  <p>記事原稿の他に照会事項への返答などがあり、複数のファイルに分かれている場合は、<br/>
+    １個の zip ファイルにまとめるか、各ファイルごとに複数回にわけて保存してください。<br/>
+なおカメラ ready 稿はひとつの zip ファイルにまとめるようにお願いします。<br/>
+この zip ファイルが印刷にまわされます。
+印刷に関係のない著者からの連絡事項のファイルなどは、<br/>
+「その他」として別に保存してもかまいません。
+Memo 欄に内容を記入するなどしてください。
+    <br/>&nbsp;
+  </p>
+
+  <div class="actions">
+    <%= f.submit '保存' %>
+  </div>
+<% end %>

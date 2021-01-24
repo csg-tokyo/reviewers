@@ -1,0 +1,63 @@
+<%= form_for(user) do |f| %>
+  <% if user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
+
+      <ul>
+      <% user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label "Email（login 名）" %>
+    <%= f.text_field :email %>
+  </div>
+
+  <div class="field">
+    <%= f.label '名前' %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= f.label '所属' %>
+    <%= f.text_field :affiliation %>
+  </div>
+
+  <div class="field">
+    <%= f.label 'パスワード' %>
+    <%= f.password_field :password %>
+  </div>
+
+  <div class="field">
+    <%= f.label 'パスワード（確認）' %>
+    <%= f.password_field :password_confirmation %>
+  </div>
+
+  <% if logged_in_as_admin? %>
+
+  <div class="field">
+    <%= f.label '有効' %>
+    <%= f.check_box :active %>
+  </div>
+
+  <div class="field">
+    <%= f.label 'ゲストエディタ' %>
+    <%= f.check_box :guest_editor %>
+  </div>
+
+  <div class="field">
+    <%= f.label '管理者' %>
+    <%= f.check_box :admin %>
+  </div>
+
+  <% end %>
+
+  <br/>
+
+  <div class="actions">
+    <%= f.submit('保存') %>
+  </div>
+<% end %>

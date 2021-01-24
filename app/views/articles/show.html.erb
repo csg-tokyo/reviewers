@@ -1,0 +1,235 @@
+<h1>記事　<%= @article.name %></h1>
+
+<p>
+  <strong>題　　　　</strong>
+  <%= @article.title %>
+</p>
+
+<p>
+  <strong>　　　　　</strong>
+  <%= @article.etitle %>
+</p>
+
+<p>
+<strong>論文種別　</strong>
+  <%= @article.type_name %>
+  <%= @article.category_name %>
+  <%= @article.review_type %>
+&nbsp; &nbsp; &nbsp; <%= @article.article_type_name %>
+</p>
+
+<p>
+<strong>　　　　　</strong>
+  <% if @article.member %>
+    会員投稿
+  <% else %>
+    非会員投稿
+  <% end %>
+</p>
+
+<p>
+  <strong>Page　　　</strong>
+  <%= @article.pages %>
+</p>
+
+<p>
+  <strong>著者　　　</strong>
+  <ul>
+  <% @article.authors.sort{|a,b| a.id <=> b.id }.each do |author| %>
+    <div>
+    <%= author.name + '・' + author.affiliation + '　' + author.email %>
+    </div>
+  <% end %>
+  </ul>
+</p>
+
+<% i_am_an_editor = logged_in_as_oneof?(@article.editors) || logged_in_as_admin? %>
+<% if i_am_an_editor %>
+
+<p>
+  <strong>著者連絡先</strong>
+  <ul>
+    <div class="scrollbox">
+    <%= simple_format(html_escape(@article.contact)) %>
+    </div>
+  </ul>
+</p>
+
+<p>
+  <strong>担当委員　</strong>
+  <% @article.users.each_with_index do |e,i|  %>
+    <% if i > 0 %>
+    、
+    <% end %>
+    <a href="mailto:<%= e.email %>"><%= e.name %></a>
+  <% end %>
+</p>
+
+<p>
+  <strong>査読者　　</strong>
+  <% @article.reviewers.sort{|a,b| a.id <=> b.id }
+              .each_with_index do |e,i| %>
+    <% unless e.name.empty? %>
+      <% if i > 0 %>
+      、
+      <% end %>
+      <%= e.name + '・' + e.affiliation %>
+    <% end %>
+  <% end %>
+  &nbsp; &nbsp; &nbsp; [<%= link_to '変更', edit_article_path(@article) %>]
+</p>
+
+<% end %>
+
+<p>
+  <strong>利害関係者</strong>
+  <% @article.conflicts.map do |e| %>
+    <%= e.user.name + '　' %>
+  <% end %>
+</p>
+
+<p>
+  <strong>Abstract</strong>
+  <ul>
+    <div class="scrollbox2">
+     <%= simple_format(html_escape(@article.abstract)) %>
+    </div>
+  </ul>
+</p>
+
+<p>
+  <strong>確認事項（二重投稿でないことの説明）</strong>
+  <ul>
+    <div class="scrollbox0">
+     <%= simple_format(html_escape(@article.ethics)) %>
+    </div>
+  </ul>
+</p>
+
+<p>
+  <strong>記事原稿</strong>
+  <ul>
+  <% @article.submissions.select(:id, :created_at, :kind, :memo)
+             .sort{|a,b| a.created_at <=> b.created_at }.each do |s| %>
+    <div>
+      <%= link_to s.created_at.to_date, submission_path(s) %>
+      <%= s.kind_name %>
+      &nbsp; &nbsp; &nbsp; <%= s.memo.truncate(20) %>
+    </div>
+  <% end %>
+
+  <% if i_am_an_editor %>
+  <div><%= link_to '新規原稿', :controller=>"submissions", :action=>"new", :article_id => @article.id %></div>
+  <% end %>
+  <br/>
+  <div>初稿の日付が原稿受付日となります。</div>
+  </ul>
+</p>
+
+<p>
+  <strong>進捗記録</strong>
+  <ul>
+  <div>
+  <% @article.actionlogs.sort{|a,b| a.created_at <=> b.created_at }.each do |a| %>
+    <% if i_am_an_editor %>
+      <%= link_to a.created_at.to_date, actionlog_path(a) %>
+    <% else %>
+      <%= a.created_at.to_date %>
+    <% end %>
+    <%= a.kind_name %><br/>
+  <% end %>
+  </div>
+
+  <% if i_am_an_editor %>
+  <div><%= link_to '新規進捗', :controller=>"actionlogs", :action=>"new", :article_id => @article.id %></div>
+  <% end %>
+  </ul>
+</p>
+
+<p>
+  <strong>査読報告</strong>
+  <ul>
+    <div>
+      <% @article.reviews.sort{|a,b| a.created_at <=> b.created_at }.each do |r| %>
+      <%= link_to r.created_at.to_date, review_path(r) %> <%= r.kind_name %> <%= r.decision_name %> &nbsp; &nbsp; &nbsp; <%= r.memo.truncate(20) %>
+      <br/>
+      <% end %>
+    </div>
+
+    <% if i_am_an_editor %>
+      <div><%= link_to '新規報告', :controller=>"reviews", :action=>"new", :article_id => @article.id %>
+      <br/>（担当委員から編集長への査読報告の作成も忘れないでください）</div>
+      <br/>
+
+      <div>
+        <% if logged_in_as_admin? %>
+          <%= link_to '担当依頼文案', "#{article_url(@article)}/editor_request" %> |
+        <% end %>
+        <%= link_to '原稿受領通知文案',
+             article_url(@article) + '/reviewing_begins/1' %>
+         | <%= link_to '査読開始通知文案',
+             article_url(@article) + '/reviewing_begins/2' %>
+      </div>
+      <div><%= link_to '査読依頼文案・査読フォーム（初回）',
+             article_url(@article) + '/review_request/1' %>
+         | <%= link_to '査読依頼文案・査読フォーム（２・３回目）',
+             article_url(@article) + '/review_request/2' %>
+      </div>
+      <div><%= link_to '照会通知文案（１回目）', article_url(@article) + '/report/1' %> |
+        <%= link_to '照会通知文案（２回目）', article_url(@article) + '/report/2' %> |
+        <%= link_to '採録通知文案', article_url(@article) + '/accept_letter' %>
+        <% if logged_in_as_admin? %>
+        | <%= link_to '最終採録通知文案', article_url(@article) + '/final_accept_letter' %>
+        | <%= link_to '不採録通知文案', article_url(@article) + '/reject_letter' %>
+        <% end %>
+      </div>
+    <% end %>
+    <br/>
+    <div>編集長への報告の日付が採録日となります。</div>
+  </ul>
+</p>
+
+<p>
+<strong>採否　　　</strong>
+<%= @article.final_decision_name %>
+</p>
+
+<p>
+<strong>掲載巻号　</strong>
+<% if @article.number == nil %>
+  未定
+<% else %>
+  <%= link_to "Volume #{@article.volume}　Number #{@article.number}",
+      "/issue/#{@article.volume}/#{@article.number}" %>
+  &nbsp; &nbsp; （掲載順 <%= @article.position %>）
+　　　　掲載順 100 以上はサイバーページ
+<% end %>
+</p>
+
+<p>
+<strong>状況　　　</strong>
+<% if @article.approved %>
+  編集委員会承認済　
+<% end %>
+<% if @article.done %>
+  完了
+<% end %>
+<% unless @article.approved || @article.done %>
+  処理中
+<% end %>
+</p>
+
+<p>
+<strong>Memo</strong>
+<ul>
+  <p><%= simple_format(html_escape(@article.memo)) %></p>
+</ul>
+</p>
+
+<%= link_to '変更', edit_article_path(@article) %> |
+<%= link_to '記事一覧', articles_path %> |
+<% if request.referer && request.referer.end_with?('edit') %>
+  <%= link_to '戻る', articles_path %>
+<% else %>
+  <%= link_to '戻る', :back %>
+<% end %>

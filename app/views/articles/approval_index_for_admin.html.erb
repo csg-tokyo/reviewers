@@ -1,0 +1,82 @@
+<h1>編集委員会承認待ち記事 著者・査読者情報</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>記事番号</th>
+      <th>題名</th>
+      <th>著者</th>
+      <th>採否</th>
+      <th>掲載</th>
+      <th>著者</th>
+      <th>査読者</th>
+    </tr>
+  </thead>
+
+  <tbody>
+  <% [true,false].each do |k| %>
+    <% @articles.each do |article| %>
+      <% if article.final_decision.is_accepted? == k %>
+        <tr>
+          <td><%= article.name %></td>
+          <td>「<%= article.title %>」</td>
+          <td>
+            <% first = true
+               names = ""
+               article.authors.sort{|a,b| a.id <=> b.id }.each do |author|
+                 unless author.name.empty?
+                   if first then
+                     first = false
+                     names = names + author.name
+                   else
+                     names = names + "・"  + author.name
+                   end
+                 end
+               end %>
+            <%= "（" + names + "）" %>
+          </td>
+          <td><%= article.final_decision_name %></td>
+          <td>
+            <% if article.number != nil %>
+            <%=  article.volume %>-<%= article.number %>
+            <% end %>
+          </td>
+
+          <td>
+            <% first = true %>
+            <% article.authors.sort{|a,b| a.id <=> b.id }.each do |author| %>
+            <%   unless author.name.empty? %>
+            <%     if first then first = false else %>, <% end %>
+            <%=    author.name %>・<%= author.affiliation %>
+            <%   end %>
+            <% end %>
+          </td>
+
+          <td>
+            <% first = true %>
+            <% article.reviewers.sort{|a,b| a.id <=> b.id }.each do |r| %>
+            <%   unless r.name.empty? %>
+            <%   if first then first = false else %>, <% end %>
+            <%=    r.name %>・<%= r.affiliation %>
+            <%   end %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  <% end %>
+  </tbody>
+</table>
+
+<br/>
+
+<%= link_to '新規記事', new_article_path %>
+| <%= link_to '記事一覧', 'articles' %>
+| <%= link_to '担当記事一覧', my_articles_path %>
+| <%= link_to '編集委承認待ち一覧', approvals_path %>
+
+<% if logged_in_as_admin? %>
+| 編集委承認待ち記事情報
+| <%= link_to '全記事一覧', 'all_articles' %>
+<% end %>
+

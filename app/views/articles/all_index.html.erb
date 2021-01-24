@@ -1,0 +1,11 @@
+<h1>全記事一覧</h1>
+
+<%= render 'list' %>
+| <%= link_to '記事一覧', 'articles' %>
+| <%= link_to '担当記事一覧', my_articles_path %>
+| <%= link_to '編集委承認待ち一覧', approvals_path %>
+
+<% if logged_in_as_admin? %>
+| <%= link_to '編集委承認待ち記事情報', approvals_info_path %>
+| <%= link_to '全記事一覧', 'all_articles' %>
+<% end %>

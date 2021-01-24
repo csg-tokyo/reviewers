@@ -1,0 +1,6 @@
+<h1>記事原稿変更</h1>
+
+<%= render 'form', submission: @submission %>
+
+<%= link_to '表示', @submission %> |
+<%= link_to '戻る', article_path(@submission.article) %>

@@ -1,0 +1,203 @@
+<%= form_for(article) do |f| %>
+  <% if article.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(article.errors.count, "error") %> prohibited this article from being saved:</h2>
+
+      <ul>
+      <% article.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label '記事番号' %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= f.label '論文種別' %>
+    <%= f.select :category, Article::CATEGORY %>
+    <%= f.select :is_letter, Article::REVIEW_TYPE %>
+    <%= f.select :article_type, Article::TYPE %>
+  </div>
+  <div class="field">
+    <%= f.label '（あれば）特集名など' %>
+    <%= f.text_field :article_type_name %>
+  </div>
+
+  <div class="field0">
+    <%= f.label '会員投稿　　' %>
+    <%= f.check_box :member %>
+  </div>
+
+  <div class="field">
+    <%= f.label '題名' %>
+    <%= f.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= f.label '（あれば）英題' %>
+    <%= f.text_field :etitle %>
+  </div>
+
+  <div class="field">
+    <%= f.label 'Pages' %>
+    <%= f.number_field :pages, in: 1..99 %>
+  </div>
+
+  <div class="field">
+    <%= f.label '要旨' %>
+  </div>
+  <div class="field">
+    <%= f.label ' ' %>
+    <%= f.text_area :abstract, rows: 8 %>
+  </div>
+
+  <p>要旨は和英まとめて記入してください。</p>
+
+  <div class="field">
+    <%= f.label '確認事項' %>
+  </div>
+  <div class="field">
+    <%= f.label ' ' %>
+    <%= f.text_area :ethics, rows: 5 %>
+  </div>
+
+  <p>著者による二重投稿でないことの説明を転記してください。</p>
+
+  <br/>
+
+  <div class="field">
+    <%= f.label '担当委員' %>
+    <%= collection_check_boxes(:article, :user_ids, User.order(:email), :id, :name) do |b| %>
+      <span class="checkbox">
+      <% if b.object.active %>
+        <%= b.label { b.check_box + b.text } %>
+      <% end %>
+      </span>
+    <% end %>
+  </div>
+
+  <p>この記事（論文）の情報を変更できるのは上で選択された委員だけとなります。</p>
+
+  <div class="field">
+    <%= f.label '利害関係者' %>
+    <%= collection_check_boxes(:article, :conflict_user_ids, User.order(:email), :id, :name) do |b| %>
+      <span class="checkbox">
+      <% if b.object.active %>
+        <%= b.label { b.check_box + b.text } %>
+      <% end %>
+      </span>
+    <% end %>
+  </div>
+
+  <br/>
+
+  <div class="field">
+    <%= f.label '著者' %>
+    <% article.authors.sort{|a,b| a.id <=> b.id }
+                      .each do |author| %>
+      <%= f.fields_for :authors, author do |author_field| %>
+        <div class="subfield">
+          <%= render partial: "author_form.html.erb",
+                     locals: {df: author_field} %>
+          <span class="checkbox">
+            <%= author_field.label '削除　' %>
+            <%= author_field.check_box :_destroy %>
+          </span>
+        </div>
+      <% end %>
+    <% end %>
+    <% 2.times do %>
+      <%= f.fields_for :authors, article.authors.build do |author_field| %>
+        <div class="subfield">
+        <%= render partial: "author_form.html.erb",
+                   locals: {df: author_field} %>
+        &nbsp;
+       （新規）
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <p>著者欄が不足する場合は、一度保存してから変更してください。
+  再度変更すると著者欄が増えます。
+  </p>
+
+  <div class="field">
+    <%= f.label '著者連絡先（郵便物の宛先）' %>
+  </div>
+  <div class="field">
+    <%= f.label ' ' %>
+    <%= f.text_area :contact, rows: 10 %>
+  </div>
+
+  <p>
+  印刷所からの連絡先として使われます。<br/>
+  著者から送付された投稿メモの著者欄の内容をフォーマットを気にせずそのまま記入してください。<br/>
+  連絡先だけ抜き出す必要はありません。会員番号などもまとめて記入ください。
+  </p>
+
+  <br/>
+
+  <% i_am_an_editor = logged_in_as_oneof?(article.editors) || logged_in_as_admin? %>
+  <% if i_am_an_editor %>
+
+  <div class="field">
+    <% reviewer_no = 0 %>
+    <% article.reviewers.sort{|a,b| a.id <=> b.id }
+              .each do |reviewer| %>
+      <%= f.label '査読者 ' +  ['Ａ', 'Ｂ', 'Ｃ'][reviewer_no] %>
+      <% reviewer_no += 1 %>
+      <div class="subfield">
+        <%= f.fields_for :reviewers, reviewer do |reviewer_field| %>
+          <%= render partial: "author_form.html.erb",
+                     locals: {df: reviewer_field} %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <br/>
+
+  <% end %>
+
+  <% if logged_in_as_admin? %>
+    <div class="field">
+      <%= f.label '掲載巻号' %>
+      <div class="subfield">
+        <%= f.label 'Volume' %>
+        <%= f.number_field :volume, in: 30..99 %>
+        <%= f.label 'Number' %>
+        <%= f.number_field :number, in: 1..5 %>
+        <%= f.label '掲載順' %>
+        <%= f.number_field :position %>
+      </div>
+    </div>
+
+    <div class="field">
+      <%= f.label '査読結果取扱い' %>
+    <div class="subfield0">
+      <%= f.label '編集委承認　' %>
+      <%= f.check_box :approved %>
+
+      <%= f.label '　　完了　' %>
+      <%= f.check_box :done %>
+    </div>
+    </div>
+  <% end %>
+
+  <br/>
+  <div class="field">
+    <%= f.label 'メモ' %><br/>
+    <%= f.text_area :memo %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit '保存' %>
+  </div>
+
+  <br/>
+<% end %>

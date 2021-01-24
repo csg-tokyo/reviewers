@@ -1,0 +1,28 @@
+<p id="notice"><%= notice %></p>
+
+<% if logged_in_as_admin? %>
+
+<p>
+  <strong>Article:</strong>
+  <%= @reviewer.article %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @reviewer.name %>
+</p>
+
+<p>
+  <strong>Affiliation:</strong>
+  <%= @reviewer.affiliation %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @reviewer.email %>
+</p>
+
+<% end %>
+
+<%= link_to 'Edit', edit_reviewer_path(@reviewer) %> |
+<%= link_to 'Back', reviewers_path %>

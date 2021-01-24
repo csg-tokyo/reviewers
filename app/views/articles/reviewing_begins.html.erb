@@ -1,0 +1,77 @@
+<% is_receipt = @number == "1" %>
+
+<% if is_receipt %>
+  <h1>原稿受領通知</h1>
+<% else %>
+  <h1>査読開始通知</h1>
+<% end %>
+
+<% ronbun = @article.category_group_name %>
+
+<p>
+To: <%= @article.authors.sort{|a,b| a.id <=> b.id }.map{|a| a.email }
+                        .join(", ") %><br/>
+Cc: <%= editor_email %><br/>
+
+Subject: <%= ronbun %>原稿 <%= @article.name %>
+<% if is_receipt %>
+  受領通知
+<% else %>
+  査読開始通知
+<% end %>
+</p>
+
+<br/>
+
+<p>
+  <% @article.authors.sort{|a,b| a.id <=> b.id }.each do |author| %>
+    <%= author.name %>様、
+  <% end %>
+</p>
+
+<p>拝啓 時下ますますご健勝のこととお慶び申しあげます。</p>
+
+<p>さて、このたび、日本ソフトウェア科学会「コンピュータソフトウェア」にご投稿いただきありがとうございます。
+貴殿の<%= ronbun %></p>
+
+<p>
+<%= ronbun %>番号：<%= @article.name %><br/>
+著者：　　
+  <% @article.authors.sort{|a,b| a.id <=> b.id }.each do |author| %>
+    <%= author.name + '　' %>
+  <% end %>
+<br/>
+<%= ronbun %>題目：<%= @article.title %>
+</p>
+
+<% if is_receipt %>
+  <p>
+  を確かに受け付けました。
+  査読開始時点で担当編集委員から改めて連絡が行きますのでお待ちください。
+  </p>
+<% else %>
+  <p>の査読を開始しましたのでお知らせします。
+
+  <p>なお、５ヶ月が経過しても結果通知がない場合は、担当編集委員あてにご連絡をいただいても差支えありません。</p>
+
+  <p><font color="red">
+  《「５ヶ月」の数値は、査読完了予定日等を勘案して適宜調整して下さい。<br/>
+  特にレター論文の場合は速報性が大切ですので「２ヶ月」など短くして下さい。》
+  </font></p>
+<% end %>
+
+<p>敬具</p>
+
+<p><%= Time.now.strftime("%Y 年 %m 月 %d 日") %></p>
+
+<% if is_receipt %>
+　<%= chiefs_signature.html_safe %>
+<% else %>
+  <p>日本ソフトウェア科学会 編集委員 <font color="red">《または「編集委員」ではなく「ゲストエディタ」》</font></p>
+
+  <p><font color="red">《氏名・所属・連絡先をここにうめる》</font></p>
+<% end %>
+
+<p><br/></p>
+
+<%= link_to '戻る', @article %>

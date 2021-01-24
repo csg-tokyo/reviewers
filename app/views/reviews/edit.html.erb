@@ -1,0 +1,6 @@
+<h1>査読報告変更</h1>
+
+<%= render 'form', review: @review %>
+
+<%= link_to '表示', @review %> |
+<%= link_to 'Cancel', article_path(@review.article) %>

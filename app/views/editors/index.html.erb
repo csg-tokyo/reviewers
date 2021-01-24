@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Editors</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Article</th>
+      <th>User</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @editors.each do |editor| %>
+      <tr>
+        <td><%= editor.article %></td>
+        <td><%= editor.user %></td>
+        <td><%= link_to 'Show', editor %></td>
+        <!-- <td><%= "link_to 'Edit', edit_editor_path(editor)" %></td> -->
+        <td><%= link_to 'Destroy', editor, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<!-- <%= "link_to 'New Editor', new_editor_path" %> ->

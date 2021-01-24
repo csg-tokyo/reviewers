@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Conflicts</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Article</th>
+      <th>User</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @conflicts.each do |conflict| %>
+      <tr>
+        <td><%= conflict.article %></td>
+        <td><%= conflict.user %></td>
+        <td><%= link_to 'Show', conflict %></td>
+        <td><%= link_to 'Edit', edit_conflict_path(conflict) %></td>
+        <td><%= link_to 'Destroy', conflict, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Conflict', new_conflict_path %>

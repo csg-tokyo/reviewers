@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Submissions</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Article</th>
+      <th>Kind</th>
+      <th>Path</th>
+      <th>Memo</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @submissions.each do |submission| %>
+      <tr>
+        <td><%= submission.article.name %></td>
+        <td><%= submission.kind_name %></td>
+        <td><%= submission.file_path %></td>
+        <td><%= submission.memo %></td>
+        <td><%= link_to 'Show', submission %></td>
+        <td><%= link_to 'Edit', edit_submission_path(submission) %></td>
+        <td><%= link_to 'Destroy', submission, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+

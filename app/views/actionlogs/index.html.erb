@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>進捗記録一覧</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Article</th>
+      <th>Kind</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @actionlogs.each do |actionlog| %>
+      <tr>
+        <td><%= actionlog.article.name %></td>
+        <td><%= actionlog.kind_name %></td>
+        <td><%= link_to 'Show', actionlog %></td>
+        <td><%= link_to 'Edit', edit_actionlog_path(actionlog) %></td>
+        <td><%= link_to 'Destroy', actionlog, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Actionlog', new_actionlog_path %>

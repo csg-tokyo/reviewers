@@ -1,0 +1,184 @@
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+/* universal */
+
+body {
+  padding-top: 60px;
+}
+
+section {
+  overflow: auto;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.center {
+  text-align: center;
+}
+
+.center h1 {
+  margin-bottom: 10px;
+}
+
+h1 {
+  margin-bottom: 50px;
+}
+
+/* header */
+
+#logo {
+  float: left;
+  margin-right: 10px;
+  font-size: 1.7em;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  padding-top: 9px;
+  font-weight: bold;
+}
+
+#logo:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* footer */
+
+footer {
+  margin-top: 45px;
+  padding-top: 5px;
+  border-top: 1px solid #eaeaea;
+  color: #777;
+}
+
+footer a {
+  color: #555;
+}
+
+footer a:hover {
+  color: #222;
+}
+
+footer small {
+  float: left;
+}
+
+footer ul {
+  float: right;
+  list-style: none;
+}
+
+footer ul li {
+  float: left;
+  margin-left: 15px;
+}
+
+/* forms */
+
+input, textarea, .select, .uneditable-input {
+  border: 1px solid #bbb;
+  width: 70%;
+  margin-bottom: 15px;
+}
+
+input[type=submit] {
+  border: 1px solid #bbb;
+  width: 40%;
+  margin-bottom: 15px;
+}
+
+input[type=checkbox] {
+  border: 1px solid #bbb;
+  margin-bottom: 0px;
+  width: 40%;
+  display: inline;
+}
+
+div.field label {
+  width: 200px;
+}
+
+div.field0 input {
+  width: 10px;
+}
+
+div.subfield label {
+  width: initial;
+  padding-left: 20px;
+  padding-right: 10px;
+}
+
+div.subfield input, text {
+  width: 23%;
+  height: initial;
+}
+
+div.subfield0 label {
+  width: initial;
+  padding-left: 20px;
+  padding-right: 10px;
+}
+
+div.subfield0 input, text {
+  width: 20px;
+  height: initial;
+}
+
+div.scrollbox0 {
+  height: 7em;
+  width: 60%;
+  overflow: scroll;
+  border: gray 1px dashed;
+}
+
+div.scrollbox {
+  height: 8.5em;
+  width: 60%;
+  overflow: scroll;
+  border: gray 1px dashed;
+}
+
+div.scrollbox2 {
+  height: 16.5em;
+  width: 60%;
+  overflow: scroll;
+  border: gray 1px dashed;
+}
+
+span.checkbox {
+  display: inline-block;
+  width: initial;
+  padding-right: 10px;
+}
+
+span.checkbox label {
+  width: initial;
+  hight: initial;
+  margin-bottom: initial;
+}
+
+input {
+  height: auto !important;
+}
+
+/* table */
+
+table th {
+  padding: 10px;
+}
+
+table td {
+  padding: 10px;
+}
+
+.container {
+  width: auto;
+  padding-left: 50px;
+}
+
+div.footnote {
+  color: #777;
+}

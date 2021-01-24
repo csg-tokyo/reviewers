@@ -1,0 +1,31 @@
+<h1>記事原稿</h1>
+
+<p>
+  <strong>Article:</strong>
+  <br/>
+  <%= @submission.article.name %>
+  <%= @submission.article.title %>
+</p>
+
+<p>
+  <strong>提出日</strong>
+  <%= @submission.created_at.to_date %>
+</p>
+
+<p>
+  <strong>種類</strong>
+  <%= @submission.kind_name %>
+</p>
+
+<p>
+  <strong>File:</strong>
+  <%= link_to 'Download', submission_path + '/download' %>
+</p>
+
+<p>
+  <strong>Memo:</strong>
+  <%= simple_format(html_escape(@submission.memo)) %>
+</p>
+
+<%= link_to '変更', edit_submission_path(@submission) %> |
+<%= link_to '戻る', article_path(@submission.article) %>

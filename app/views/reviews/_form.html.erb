@@ -1,0 +1,133 @@
+<%= form_for(review) do |f| %>
+  <% if review.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(review.errors.count, "error") %> prohibited this review from being saved:</h2>
+
+      <ul>
+      <% review.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+<p>本ページは、査読者からの査読報告と、担当編集委員から編集長への最終報告（編集長への報告）を入力するために用います。<br/>
+それぞれ別々の報告として入力してください。
+</p>
+
+  <h3><%= review.article.name %>　<%= review.article.title %></h3>
+
+  <div class="field">
+    <%= f.hidden_field :article_id %>
+  </div>
+  <br/>
+
+  <div class="field">
+    <%= f.label '報告日' %>
+    <%= f.date_select :created_at %>
+  </div>
+
+<script>
+function review_changed() {
+  var kind = document.getElementById("review_kind");
+  var to_editor = document.getElementById("to_editor");
+  if (kind.value == <%= Review::FINAL_REPORT %>) {
+    to_editor.innerHTML = `本報告が「編集長への報告」の場合、上の欄に判定経過、判定理由等の担当編集委員から編集長への説明を記入してください。<br/>
+      なお本ページの判定結果が最終判定となります。参考意見や採録条件コメントの有無が正しいか確認してください。<br/>
+      ここに書かれた内容は著者へ通知されません。`;
+    to_author.innerHTML = `本報告が担当編集委員から「編集長への報告」の場合、上の欄には担当編集委員から著者への説明を記入します。<br/>
+      ここに書かれた内容は、著者への通知文に挿入されます。
+      なお各査読者から著者への説明を<font color="red">ここにコピーする必要はありません。</font><br/>
+      各査読者からの説明も別途、著者への通知文へ挿入されます。<br/>
+      <br/>
+      判定が採録の場合は、例えば「各査読者の査読報告の中に記されているコメントや参考意見を論文に反映してください」<br/>
+      のような説明を上の欄に記入します。</br>
+      基本的にカメラレディ原稿には、すべてのコメントや参考意見を反映してもらうのが原則です。<br/>
+      そうでない場合は、どこまで反映すべきかをここに記入してください。<br/>
+      <br/>
+      判定が不採録の場合、
+      下記の内容を上の欄に記入してください。<br/>
+      <br/>
+      　　本論文は以下の○印に示す理由により不採録と判定いたします。<br/>
+      　　　　[　] 内容が本学会の対象範囲外と考えます。<br/>
+      　　　　[　] 内容が既知、または既発表の事実から容易に類推できると考えられます。<br/>
+      　　　　[　] 書き方、議論の進め方に不明確な点が多く、このままでは内容を的確に把握できません。<br/>
+      　　　　[　] このままでは、内容が信頼できるものという根拠が不足していると考えます。<br/>
+      　　　　[　] 内容に本質的な誤りがあると考えます。<br/>
+      　　　　[　] その他<br/>
+      <br/>
+      また可能なら、論文を改訂した上で再投稿するよう、「著者への説明」の中で勧めてください。<br/>`
+  }
+  else {
+    to_editor.innerHTML = `上の欄には査読者から編集委員への特記事項を（あれば）書いてください。<br/>
+        ここに書かれた内容は著者へ通知されません。`
+    to_author.innerHTML = `上の欄には査読者から著者への説明を記してください。ここに書かれた内容は、著者への通知文に挿入されます。<br/>
+      判定が「採録条件コメントあり」であり、採録判定に対して<br/>
+      　* 小規模かつ明確な改訂要求（採録のための条件）<br/>
+      　* その他論文改善のための参考意見<br/>
+      の両方がある場合、２つが明確に「著者への説明」の中で区別されているかを担当編集委員が確認し、<br/>
+      明確でない場合は査読者に査読報告の再提出を求めてください。
+      <br/>`
+  }
+}
+</script>
+
+  <div class="field">
+    <%= f.label '種類' %>
+    <%= f.select :kind, Review::KIND, {}, { :id => 'review_kind', :onchange => 'review_changed()'} %>
+  </div>
+
+  <div class="field">
+    <%= f.label '判定' %>
+    <%= f.select :decision, Review::DECISION %>
+  </div>
+
+  <div class="field">
+    <%= f.label '論文賞候補' %>
+    <%= f.check_box :award %>
+  </div>
+
+  <div class="field">
+    <%= f.label '編集委員への特記事項' %>
+  </div>
+  <div class="field">
+    <%= f.label ' ' %>
+    <%= f.text_area :to_editor, rows: 10 %>
+  </div>
+
+  <p id='to_editor'>
+    To be filled by review_changed().
+  </p>
+  <p><br/></p>
+
+  <div class="field">
+    <%= f.label '著者への説明' %>
+  </div>
+  <div class="field">
+    <%= f.label ' ' %>
+    <%= f.text_area :to_author, rows: 10 %>
+  </div>
+
+  <div id='to_author'>
+    to be filled by review_changed().
+  <br/>
+  </div>
+
+  <p><br></p>
+
+  <div class="field">
+    <%= f.label :memo %>
+  </div>
+  <div class="field">
+    <%= f.label ' ' %>
+    <%= f.text_area :memo %>
+  </div>
+
+  <p>メモは自由記入欄です。</p>
+
+  <div class="actions">
+    <%= f.submit '保存' %>
+  </div>
+
+<script>review_changed();</script>
+<% end %>

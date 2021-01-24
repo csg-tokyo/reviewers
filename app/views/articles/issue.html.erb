@@ -1,0 +1,76 @@
+<h1>記事一覧</h1>
+
+<h3>volume: <%= @volume %>　number: <%= @number %></h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>記事番号</th>
+      <th>題名</th>
+      <th>種別</th>
+      <th>レター</th>
+      <th>依頼</th>
+      <th>推薦</th>
+      <th>Page</th>
+      <th>掲載順</th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% total_pages = 0 %>
+    <% cyber_pages = 0 %>
+    <% @articles.each do |article| %>
+      <tr>
+        <td>
+          <% pos = article.position || 0 %>
+          <% if pos >= 100 then %><u><% end %>
+          <%= article.name %>
+          <% if pos >= 100 then %></u><% end %>
+        </td>
+        <td>
+          <span title="<%= sanitize article.title %>">
+          <%= sanitize article.title.truncate(30) %>
+          </span>
+        </td>
+        <td><%= article.category_name %></td>
+        <td><%= show_boolean(article.is_letter) %></td>
+        <td><%= show_boolean(article.is_invited?) %></td>
+        <td><%= show_boolean(article.is_recommended?) %></td>
+        <td><%= article.pages %></td>
+        <td><%= article.position %></td>
+
+        <% total_pages += article.pages.to_i if pos < 100 %>
+        <% cyber_pages += article.pages.to_i if pos >= 100 %>
+
+        <td>
+          <% camera = article.camera_ready %>
+          <% unless camera.nil? %>
+            <%= link_to '原稿', submission_url(camera) + '/download' %>
+          <% end %>
+        </td>
+        <td><%= link_to '詳細', article %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br/>
+
+<div>冊子総ページ数 <%= total_pages %>
+     &nbsp;&nbsp; （サイバーページ　 <%= cyber_pages %> ページ）</div>
+
+<div class="footnote">記事番号に下線がついた記事はサイバーページ。<br/>
+記事の並び順は掲載順の数値の昇順。
+掲載順の数値は並び順を決めるだけに使われ、それ以外の意味はない。<br/>
+ただし 100 以上はサイバーページの意味。
+</div>
+
+<% if logged_in_as_admin? %>
+<div><%= link_to '全記事の状況を完了に変更', "/issue/#{@volume}/#{@number}", method: :put, data: { confirm: 'Are you sure?' } %></div>
+<% end %>
+
+<p>
+<div>
+<%= link_to '戻る', :back %>
+</div></p>

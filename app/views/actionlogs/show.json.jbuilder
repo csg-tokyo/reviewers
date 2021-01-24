@@ -1,0 +1,1 @@
+json.partial! "actionlogs/actionlog", actionlog: @actionlog

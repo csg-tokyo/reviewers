@@ -1,0 +1,51 @@
+<h1>査読報告</h1>
+
+<strong>Article</strong><br/>
+<p>
+  <%= @review.article.name %>
+  <%= @review.article.title %>
+</p>
+
+<p>
+  <strong>種類　　</strong>
+  <%= @review.kind_name %>
+</p>
+
+<p>
+  <strong>報告日　</strong>
+  <%= @review.created_at.to_date %>
+</p>
+
+<p>
+  <strong>判定　　</strong>
+  <%= @review.decision_name %>
+</p>
+
+<p>
+  <strong>論文賞　</strong>
+  <%= @review.award ? '推薦する' : '推薦しない' %>
+</p>
+
+<p>
+  <strong>編集委員への報告</strong>
+  <ul>
+    <%= simple_format(html_escape(@review.to_editor)) %>
+  </ul>
+</p>
+
+<p>
+  <strong>著者への説明</strong>
+  <ul>
+    <%= simple_format(html_escape(@review.to_author)) %>
+  </ul>
+</p>
+
+<p>
+  <strong>Memo</strong>
+  <ul>
+    <%= simple_format(html_escape(@review.memo)) %>
+  </ul>
+</p>
+
+<%= link_to '修正', edit_review_path(@review) %> |
+<%= link_to '戻る', article_path(@review.article) %>

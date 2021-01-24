@@ -1,0 +1,88 @@
+<h1>不採録通知（編集委員長より著者宛）</h1>
+
+<% ronbun = @article.category_group_name %>
+
+<p>
+To: <%= @article.authors.sort{|a,b| a.id <=> b.id }.map{|a| a.email }
+                        .join(", ") %><br/>
+Cc: <%= editor_email %>,
+    <%= @article.users.map {|e| e.email }.join(", ") %><br/>
+Subject: [要返信] <%= ronbun %>査読結果 <%= @article.name %>
+</p>
+
+<br/>
+
+<p>[要返信] 本メールを受け取られましたら、受領確認のご返信をいただければ幸いです。(誰か一名代表の方からご返信いただければ幸いです。)</p>
+
+<p>
+  <% @article.authors.sort{|a,b| a.id <=> b.id }.each do |author| %>
+    <%= author.name %>様、
+  <% end %>
+</p>
+
+<p>拝啓 時下ますますご健勝のこととお慶び申しあげます。</p>
+
+<p>さて、このたび、日本ソフトウェア科学会「コンピュータソフトウェア」にご投稿いただきました<%= ronbun %></p>
+
+<p>
+<%= ronbun %>番号：<%= @article.name %><br/>
+著者：
+  <% @article.authors.sort{|a,b| a.id <=> b.id }.each do |author| %>
+    <%= author.name + '　' %>
+  <% end %>
+<br/>
+<%= ronbun %>題目：<%= @article.title %>
+</p>
+
+<p>ですが、査読の結果、まことに残念ながら不採録と決定されましたのでご通知申し上げます。</p>
+
+<p>担当編集委員および査読者からのコメントを本メールに同封いたしますので、今後の研究の参考にしていただければ幸いです。</p>
+
+<p>今後とも日本ソフトウェア科学会の発展にご協力下さいますようお願い申し上げます。</p>
+
+<p><%= Time.now.strftime("%Y 年 %m 月 %d 日") %></p>
+
+<%= chiefs_signature.html_safe %>
+
+<% unless @article.final_decision.nil? %>
+<p>========================================</p>
+<p>担当編集委員</p>
+
+<p><%= simple_format(html_escape(@article.final_decision.to_author)) %></p>
+<% end %>
+
+<% unless @review_a.nil? %>
+<p>========================================</p>
+<p>査読者Ａ</p>
+
+<p><%= @number %> 回目査読結果<br/>
+判定：<%= @review_a.decision_name %></p>
+
+<p><%= simple_format(html_escape(@review_a.to_author)) %></p>
+<% end %>
+
+<% unless @review_b.nil? %>
+<p>========================================</p>
+
+<p>査読者Ｂ</p>
+
+<p><%= @number %> 回目査読結果<br/>
+判定：<%= @review_b.decision_name %></p>
+
+<p><%= simple_format(html_escape(@review_b.to_author)) %></p>
+<% end %>
+
+<% unless @review_c.nil? %>
+<p>========================================</p>
+
+<p>査読者Ｃ</p>
+
+<p><%= @number %> 回目査読結果<br/>
+判定：<%= @review_c.decision_name %></p>
+
+<p><%= simple_format(html_escape(@review_c.to_author)) %></p>
+<% end %>
+
+<br/>
+
+<%= link_to '戻る', @article %>

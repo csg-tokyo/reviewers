@@ -1,0 +1,16 @@
+<h1>進捗記録</h1>
+
+<strong>Article:</strong>
+<p>
+  <%= @actionlog.article.name %> <%= @actionlog.article.title %>
+</p>
+
+<p>
+  <%= @actionlog.created_at.to_date %>
+  <%= @actionlog.kind_name %>
+</p>
+
+<% if logged_in_as_admin? %>
+  <%= link_to '変更', edit_actionlog_path(@actionlog) %> |
+<% end %>
+<%= link_to '戻る', article_path(@actionlog.article) %>
