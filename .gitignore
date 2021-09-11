@@ -18,9 +18,12 @@
 /tmp/*
 !/log/.keep
 !/tmp/.keep
+!/tmp/pids/.keep
 
 # Ignore Byebug command history file.
 .byebug_history
 
 /files/*
+
+/memo.txt
 
