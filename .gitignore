@@ -27,5 +27,7 @@
 /files/*
 !/files/.keep
 
+config/initializers/contact_addr.rb
 /memo.txt
+
 
