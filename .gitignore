@@ -23,7 +23,9 @@
 # Ignore Byebug command history file.
 .byebug_history
 
+# Ignore files, where submitted data are stored.
 /files/*
+!/files/.keep
 
 /memo.txt
 
