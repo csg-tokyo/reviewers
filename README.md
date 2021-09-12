@@ -39,19 +39,44 @@ end
 また画面のヘッダとフッタを修正するには `app/views/layouts/_header.html.erb` と
 `app/views/layouts/_footer.html.erb` を修正する。
 
-## データベース初期化
+## インストール
+
+### サーバの準備
+
+以下のパッケージのインストールが必要。
+
+- nginx とその SSL 証明書
+
+- postgresql, libpq-dev, sqlite3, libsqlite3-dev
+
+- ruby, nodejs
+
+### アプリケーション・プログラムの準備
+
+- git clone https://github.com/csg-tokyo/reviewers.git
+
+- cd reviewers
+
+- bundle install
+
+### データベース初期化
 
 ```
 sudo -u postgres createuser -s -P jssst
-DB_PASS=‘<pass>' bundle exec rake db:create RAILS_ENV=production
-DB_PASS=‘<pass>' bundle exec rake db:migrate RAILS_ENV=production
-DB_PASS=‘<pass>' rails c -e production
+DB_PASS=‘<pass>' SECRET_KEY_BASE=`bundle exec rake secret` bundle exec rake db:create RAILS_ENV=production
+DB_PASS=‘<pass>' SECRET_KEY_BASE=`bundle exec rake secret` bundle exec rake db:migrate RAILS_ENV=production
+DB_PASS='<pass>' SECRET_KEY_BASE=`bundle exec rake secret` bundle exec rails c -e production
+```
 
-User.create!(:name=>”<user name>", :password=>”<user pass>", :password_confirmation => “<pass>", :email=>”<user email>", :admin=>true)
+Rails のコンソールから下記の式を実行する。
+
+```
+User.create!(:name=>”<user name>", :password=>”<user pass>", :password_confirmation => “<user pass>", :email=>”<user email>", :admin=>true)
 ```
 
 最後の行の &lt;user name&gt; は査読管理システム上の管理者権限をもつユーザ名。
 &lt;user pass&gt; はそのパスワード。
+&lt;user email&gt; はメールアドレス（ログイン名として使われる）。
 
 ## 起動方法
 
@@ -67,7 +92,7 @@ SMTP 認証を使わないので MAIL_SERVER は MAIL_ADDR 宛のメールを最
 bundle exec pumactl halt
 ```
 
-## データベース
+## データの保存先
 
 production 環境では PostgreSQL が使われる。
 一部のデータは `./files/` に保存される。

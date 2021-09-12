@@ -27,7 +27,10 @@
 /files/*
 !/files/.keep
 
+# These may include somewhat confidential info.
 config/initializers/contact_addr.rb
+/start.sh
 /memo.txt
+/memo/*
 
 
