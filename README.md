@@ -78,6 +78,12 @@ User.create!(:name=>”<user name>", :password=>”<user pass>", :password_confi
 &lt;user pass&gt; はそのパスワード。
 &lt;user email&gt; はメールアドレス（ログイン名として使われる）。
 
+### assets の更新
+
+```
+RAILS_ENV='production' SECRET_KEY_BASE=`bundle exec rake secret` bundle exec rake assets:precompile RAILS_ENV=production
+```
+
 ## 起動方法
 
 ```
